@@ -344,13 +344,13 @@ namespace DapperExtensions
 
         public static void InitTableForOracle(TableEntity table) //初始化增删改等语句
         {
-            string Fields = GetFieldsStr(table.AllFieldList, "\"", "\"");
+            string Fields = GetFieldsStr(table.AllFieldList, "", "");
             string FieldsAt = GetFieldsAtStr(table.AllFieldList, ":");
-            string FieldsEq = GetFieldsEqStr(table.AllFieldList, "\"", "\"", ":");
+            string FieldsEq = GetFieldsEqStr(table.AllFieldList, "", "", ":");
 
-            string FieldsExtKey = GetFieldsStr(table.ExceptKeyFieldList, "\"", "\"");
+            string FieldsExtKey = GetFieldsStr(table.ExceptKeyFieldList, "", "");
             string FieldsAtExtKey = GetFieldsAtStr(table.ExceptKeyFieldList, ":");
-            string FieldsEqExtKey = GetFieldsEqStr(table.ExceptKeyFieldList, "\"", "\"", ":");
+            string FieldsEqExtKey = GetFieldsEqStr(table.ExceptKeyFieldList, "", "", ":");
 
             table.AllFields = Fields;
             table.AllFieldsAt = FieldsAt;
@@ -360,26 +360,26 @@ namespace DapperExtensions
             table.AllFieldsAtExceptKey = FieldsAtExtKey;
             table.AllFieldsAtEqExceptKey = FieldsEqExtKey;
 
-            table.InsertSql = string.Format("INSERT INTO \"{0}\"({1})VALUES({2})", table.TableName, Fields, FieldsAt);
+            table.InsertSql = string.Format("INSERT INTO {0}({1})VALUES({2})", table.TableName, Fields, FieldsAt);
             if (!string.IsNullOrEmpty(table.KeyName)) //有主键
             {
-                table.InsertReturnIdSql = string.Format("INSERT INTO \"{0}\"({1})VALUES(```seq```.NEXTVAL,{2})", table.TableName, Fields, FieldsAtExtKey);
+                table.InsertReturnIdSql = string.Format("INSERT INTO {0}({1})VALUES(```seq```.NEXTVAL,{2})", table.TableName, Fields, FieldsAtExtKey);
                 if (table.IsIdentity) //是自增
                 {
-                    table.InsertSql = string.Format("INSERT INTO \"{0}\"({1})VALUES({2})", table.TableName, FieldsExtKey, FieldsAtExtKey);
+                    table.InsertSql = string.Format("INSERT INTO {0}({1})VALUES({2})", table.TableName, FieldsExtKey, FieldsAtExtKey);
                 }
 
-                table.InsertIdentitySql = string.Format("INSERT INTO \"{0}\"({1})VALUES({2})", table.TableName, Fields, FieldsAt);
+                table.InsertIdentitySql = string.Format("INSERT INTO {0}({1})VALUES({2})", table.TableName, Fields, FieldsAt);
 
-                table.DeleteByIdSql = string.Format("DELETE FROM \"{0}\" WHERE \"{1}\"=:id", table.TableName, table.KeyName);
-                table.DeleteByIdsSql = string.Format("DELETE FROM \"{0}\" WHERE \"{1}\" IN :ids", table.TableName, table.KeyName);
-                table.GetByIdSql = string.Format("SELECT {0} FROM \"{1}\" WHERE \"{2}\"=:id", Fields, table.TableName, table.KeyName);
-                table.GetByIdsSql = string.Format("SELECT {0} FROM \"{1}\" WHERE \"{2}\" IN :ids", Fields, table.TableName, table.KeyName);
-                table.UpdateSql = string.Format("UPDATE \"{0}\" SET {1} WHERE \"{2}\"=:{2}", table.TableName, FieldsEqExtKey, table.KeyName);
+                table.DeleteByIdSql = string.Format("DELETE FROM {0} WHERE {1}=:id", table.TableName, table.KeyName);
+                table.DeleteByIdsSql = string.Format("DELETE FROM {0} WHERE {1} IN :ids", table.TableName, table.KeyName);
+                table.GetByIdSql = string.Format("SELECT {0} FROM {1} WHERE {2}=:id", Fields, table.TableName, table.KeyName);
+                table.GetByIdsSql = string.Format("SELECT {0} FROM {1} WHERE {2} IN :ids", Fields, table.TableName, table.KeyName);
+                table.UpdateSql = string.Format("UPDATE {0} SET {1} WHERE {2}=:{2}", table.TableName, FieldsEqExtKey, table.KeyName);
             }
 
-            table.DeleteAllSql = string.Format("DELETE FROM \"{0}\" ", table.TableName);
-            table.GetAllSql = string.Format("SELECT {0} FROM \"{1}\" ", Fields, table.TableName);
+            table.DeleteAllSql = string.Format("DELETE FROM {0} ", table.TableName);
+            table.GetAllSql = string.Format("SELECT {0} FROM {1} ", Fields, table.TableName);
         }
 
         public static void CheckTableKey(TableEntity table)
